@@ -179,10 +179,10 @@
     if (res.status === 409) {
       alert("You have already registered. Form will be locked.");
       document.querySelectorAll("input, select, button").forEach(el => el.disabled = true);
-    } else if (res.ok) {
-      alert(msg);
-      document.getElementById("registrationForm").reset();
-    } else {
+    } 	  if (res.ok) {
+	    alert("You are registered successfully. Thank you!");
+	    document.getElementById("registrationForm").reset();
+	  }else {
       alert("Error: " + msg);
     }
   } catch (error) {
