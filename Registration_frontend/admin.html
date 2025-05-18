@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Panel - Registered Students</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+    #content {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loginSection">
+    <h2>Admin Login</h2>
+    <input type="password" id="adminPassword" placeholder="Enter admin password" />
+    <button id="loginBtn">Login</button>
+    <p id="errorMsg" style="color: red; display:none;">Wrong password, try again!</p>
+  </div>
+
+  <div id="content">
+    <h1>Registered Students</h1>
+    <button id="loadBtn">Load Registered Students</button>
+
+    <table id="studentsTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>College</th>
+          <th>Contact</th>
+          <th>Email</th>
+          <th>Courses</th>
+          <th>Timing</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const adminPassword = "Secret123";  // Change to your preferred password
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      const inputPwd = document.getElementById('adminPassword').value;
+      if(inputPwd === adminPassword){
+        // Hide login, show content
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('content').style.display = 'block';
+      } else {
+        // Show error
+        document.getElementById('errorMsg').style.display = 'block';
+      }
+    });
+
+    document.getElementById('loadBtn').addEventListener('click', async () => {
+      const res = await fetch('http://localhost:8080/api/registrations');
+      if (!res.ok) {
+        alert('Failed to fetch registered students');
+        return;
+      }
+
+      const students = await res.json();
+      const tbody = document.querySelector('#studentsTable tbody');
+      tbody.innerHTML = '';
+
+      students.forEach(student => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${student.name}</td>
+          <td>${student.college}</td>
+          <td>${student.contact}</td>
+          <td>${student.email}</td>
+          <td>${student.courses}</td>
+          <td>${student.timing}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('studentsTable').style.display = 'table';
+    });
+  </script>
+
+</body>
+</html>
